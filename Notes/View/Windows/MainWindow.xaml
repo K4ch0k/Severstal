@@ -1,0 +1,184 @@
+﻿<Window x:Class="Notes.View.Windows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Notes.View.Windows"
+        mc:Ignorable="d"
+        Name="MainWin" Background="#FF334770"
+        Title="Заметки" 
+        Height="450" Width="800"
+        MinHeight="300" MinWidth="535"
+        Closing="MainWindow_Closing">
+    <Grid Margin="1" Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="150"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition />
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.ColumnSpan="2" 
+                    Background="#FFA7BDE0"
+                    Orientation="Horizontal"
+                    >
+            <Button Name="BackStepBtn"
+                    Width="30"
+                    Click="BackStepBtn_Click"
+                    Style="{StaticResource BtnHeader}"
+                    Content="⮪"
+                    ToolTip="Шаг назад">
+            </Button>
+            <ToggleButton Name="BoldBtn"
+                          FontWeight="Bold"
+                          ToolTip="Bold"
+                          Content="B"
+                          Style="{StaticResource Header}"
+                          Click="BoldBtn_Click">
+            </ToggleButton>
+            <ToggleButton Name="ItalicBtn"
+                          ToolTip="Italic"
+                          FontStyle="Italic"
+                          Content="I"
+                          Style="{StaticResource Header}"
+                          Click="ItalicBtn_Click">
+            </ToggleButton>
+            <ToggleButton Name="UnderlineBtn"
+                          ToolTip="Underline"
+                          Style="{StaticResource Header}"
+                          Click="UnderlineBtn_Click">
+                <TextBlock TextDecorations="Underline"
+                           Foreground="Black"
+                           Text="U">
+                </TextBlock>
+            </ToggleButton>
+            <ComboBox Name="FontFamilyComboBox"
+                      Width="300"
+                      SelectionChanged="FontFamilyComboBox_SelectionChanged"
+                      SelectedIndex="81"
+                      Padding="5,-5"
+                      ItemsSource="{Binding AllFonts}"
+                      Style="{StaticResource ComboBoxHeader}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Source}"
+                                   TextWrapping="Wrap"
+                                   FontFamily="{Binding Source}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <ComboBox Name="FontSizeComboBox"
+                      IsEditable="True"
+                      Width="75"
+                      SelectedIndex="5"
+                      TextBoxBase.TextChanged="FontSizeComboBox_TextChanged"
+                      Style="{StaticResource ComboBoxHeader}">
+            </ComboBox>
+            <ToggleButton Name="AlignLeftBtn"
+                          FontWeight="Bold"
+                          ToolTip="Выравнивание слева"
+                          Style="{StaticResource BtnAlign}"
+                          Click="AlignLeftBtn_Click">
+                <ToggleButton.Background>
+                    <ImageBrush ImageSource="/Notes;component/Images/AlignLeft.png"/>
+                </ToggleButton.Background>
+            </ToggleButton>
+            <ToggleButton Name="AlignCenterBtn"
+                          FontWeight="Bold"
+                          ToolTip="Выравнивание по центру"
+                          Style="{StaticResource BtnAlign}"
+                          Click="AlignCenterBtn_Click">
+                <ToggleButton.Background>
+                    <ImageBrush ImageSource="/Notes;component/Images/AlignCenter.png"/>
+                </ToggleButton.Background>
+            </ToggleButton>
+            <ToggleButton Name="AlignRightBtn"
+                          FontWeight="Bold"
+                          ToolTip="Выравнивание справа"
+                          Style="{StaticResource BtnAlign}"
+                          Click="AlignRightBtn_Click">
+                <ToggleButton.Background>
+                    <ImageBrush ImageSource="/Notes;component/Images/AlignRight.png"/>
+                </ToggleButton.Background>
+            </ToggleButton>
+            <ToggleButton Name="AlignJustifyBtn"
+                          FontWeight="Bold"
+                          ToolTip="Выравнивание по ширине"
+                          Style="{StaticResource BtnAlign}"
+                          Click="AlignJustifyBtn_Click">
+                <ToggleButton.Background>
+                    <ImageBrush ImageSource="/Notes;component/Images/AlignJustify.png"/>
+                </ToggleButton.Background>
+            </ToggleButton>
+        </StackPanel>
+
+        <RichTextBox Name="MainRchTxtBox"
+                     Grid.Row="1"
+                     Grid.RowSpan="2"
+                     VerticalScrollBarVisibility="Auto" 
+                     SelectionChanged="MainRchTxtBox_SelectionChanged"
+                     TextChanged="MainRchTxtBox_TextChanged"
+                     Margin="0,2,0,0"
+                     Padding="2"
+                     PreviewTextInput="MainRchTxtBox_PreviewTextInput"
+                     PreviewKeyDown="MainRchTxtBox_PreviewKeyDown">
+
+        </RichTextBox>
+        <ListView Name="AllNotesListView" 
+                  ItemsSource="{Binding AllNotesCollection}" 
+                  SelectionChanged="AllNotesListView_SelectionChanged"
+                  BorderThickness="0"
+                  Background="#FFF8F1DF"
+                  ScrollViewer.VerticalScrollBarVisibility="Visible"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  Grid.Column="1" 
+                  Grid.Row="1"
+                  Margin="0,2,0,0"
+                  ScrollViewer.CanContentScroll="False">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding FileName}" 
+                                   TextWrapping="Wrap" 
+                                   Width="120"
+                                   FontSize="18" 
+                                   ToolTip="{Binding DateCreate}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+            <Button Name="CreateNoteBtn"
+                    Style="{StaticResource BtnCreateDel}"
+                    ToolTip="Создание заметки"
+                    Click="CreateNoteBtn_Click">
+                <Button.Background>
+                    <ImageBrush ImageSource="/Notes;component/Images/AddNote.png"/>
+                </Button.Background>
+            </Button>
+            <Button Name="DeleteNoteBtn"
+                    Style="{StaticResource BtnCreateDel}"
+                    Visibility="Hidden"
+                    ToolTip="Удаление заметки"
+                    Click="DeleteNoteBtn_Click">
+                <Button.Background>
+                    <ImageBrush ImageSource="/Notes;component/Images/RemoveNote.png"/>
+                </Button.Background>
+            </Button>
+            <Button Name="SaveNoteBtn"
+                    Style="{StaticResource BtnSave}"
+                    Visibility="Hidden"
+                    ToolTip="Сохранение заметки"
+                    Click="SaveNoteBtn_Click">
+                <Button.Background>
+                    <ImageBrush ImageSource="/Notes;component/Images/SaveIcon.png"/>
+                </Button.Background>
+            </Button>
+        </StackPanel>
+
+    </Grid>
+</Window>
